@@ -37,7 +37,8 @@ class DeprecatedVersionCheckMiddleware
                             key: 'laravel-app-version-manager::version-messages.deprecated_app_version.message',
                             replace: [
                                 'appName' => config(key: 'laravel-app-version-manager.app_name'),
-                            ]),
+                            ],
+                        ),
                         'code' => 'app_version_update_required',
                     ],
                     status: 426,

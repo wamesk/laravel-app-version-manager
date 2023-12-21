@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
+use Wame\LaravelAppVersionManager\Exceptions\OlderAppVersion;
 use Wame\LaravelAppVersionManager\Http\Requests\CheckAppVersionRequest;
 use Wame\LaravelAppVersionManager\Services\AppVersionService;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
@@ -23,7 +24,7 @@ class AppVersionController extends Controller
             return response(
                 content: [
                     'message' => __(
-                        key: 'laravel-app-version-manager::version-messages.up_to_date_app_version',
+                        key: 'laravel-app-version-manager::version-messages.up_to_date_app_version.message',
                         replace: [
                             'appName' => config(key: 'laravel-app-version-manager.app_name'),
                         ],
@@ -32,11 +33,11 @@ class AppVersionController extends Controller
                 ],
                 status: 200,
             );
-        } catch (Exception $e) {
+        } catch (OlderAppVersion) {
             return response(
                 content: [
                     'message' => __(
-                        key: 'laravel-app-version-manager::version-messages.older_app_version',
+                        key: 'laravel-app-version-manager::version-messages.older_app_version.message',
                         replace: [
                             'appName' => config(key: 'laravel-app-version-manager.app_name'),
                         ],
@@ -45,7 +46,7 @@ class AppVersionController extends Controller
                 ],
                 status: 200,
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return response(
                 content: [
                     'message' => __(key: 'Server Error'),
