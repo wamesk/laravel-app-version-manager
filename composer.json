@@ -1,0 +1,30 @@
+{
+    "name": "wamesk/laravel-app-version-manager",
+    "keywords": [
+        "laravel",
+        "versions",
+        "version",
+        "app"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wame\\LaravelAppVersionManager\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "adrianzofcin",
+            "email": "adrianzofcin@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wame\\LaravelAppVersionManager\\LaravelAppVersionManagerProvider"
+            ]
+        }
+    },
+    "require": {
+        "laravel/framework": "8.*|9.*|10.*"
+    }
+}
