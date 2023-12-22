@@ -6,6 +6,16 @@
 composer require wamesk/laravel-app-version-manager
 ```
 
+Add **LaravelAppVersionManagerProvider.php** in app.php.
+
+```php
+'providers' => [
+    ...
+    LaravelAppVersionManager\LaravelAppVersionManagerProvider::class,
+    ...
+],
+```
+
 Next step is to publish all translations, migrations and configurations. So you can change them to fit your needs.
 
 ```shell
