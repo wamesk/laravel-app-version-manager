@@ -27,5 +27,15 @@ enum VersionStatus: string
             default => null
         };
     }
+
+    public function title(): ?string
+    {
+        return match ($this) {
+            self::CURRENT => __(key: 'laravel-app-version-manager::version.value.current'),
+            self::OLDER => __(key: 'laravel-app-version-manager::version.value.older'),
+            self::DEPRECATED => __(key: 'laravel-app-version-manager::version.value.deprecated'),
+            default => null
+        };
+    }
 }
 

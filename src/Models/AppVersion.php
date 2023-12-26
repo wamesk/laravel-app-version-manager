@@ -14,6 +14,7 @@ use Wame\LaravelAppVersionManager\Enums\VersionStatus;
  * @property string id
  * @property string title
  * @property VersionStatus status
+ * @property string status_db
  * @property bool deprecated
  * @property bool older
  * @property Carbon created_at
@@ -36,6 +37,7 @@ class AppVersion extends Model
 
     protected $appends = [
         'status',
+        'status_db',
         'deprecated',
         'older',
     ];
@@ -51,11 +53,27 @@ class AppVersion extends Model
         'deleted_at' => 'datetime',
     ];
 
+    public function allStatuses(): array
+    {
+        return [
+            VersionStatus::CURRENT?->toDB() => VersionStatus::CURRENT->title(),
+            VersionStatus::OLDER?->toDB() => VersionStatus::OLDER->title(),
+            VersionStatus::DEPRECATED?->toDB() => VersionStatus::DEPRECATED->title(),
+        ];
+    }
+
     public function status(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => VersionStatus::fromDB($value),
-            set: fn (VersionStatus $status) => $status->toDB(),
+            set: fn (VersionStatus $status) => $status?->toDB(),
+        );
+    }
+
+    public function statusDb(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->status_db ?? $this->status?->toDB(),
         );
     }
 
