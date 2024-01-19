@@ -53,7 +53,7 @@ class AppVersion extends Model
         'deleted_at' => 'datetime',
     ];
 
-    public function allStatuses(): array
+    public static function allStatuses(): array
     {
         return [
             VersionStatus::CURRENT?->toDB() => VersionStatus::CURRENT->title(),
