@@ -1,6 +1,6 @@
 {
     "name": "wamesk/laravel-app-version-manager",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "keywords": [
         "laravel",
         "versions",
@@ -14,8 +14,8 @@
     },
     "authors": [
         {
-            "name": "adrianzofcin",
-            "email": "adrianzofcin@gmail.com"
+            "name": "WAME s.r.o.",
+            "homepage": "https://wame.sk"
         }
     ],
     "extra": {
@@ -26,6 +26,6 @@
         }
     },
     "require": {
-        "laravel/framework": "8.*|9.*|10.*"
+        "laravel/framework": "^8.0|^9.0|^10.0|^11.0|^12.0"
     }
 }
