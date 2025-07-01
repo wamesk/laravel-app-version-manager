@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Wame\LaravelAppVersionManager;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Wame\LaravelAppVersionManager\Events\AppVersionUpdatedEvent;
 use Wame\LaravelAppVersionManager\Http\Middleware\DeprecatedVersionCheckMiddleware;
@@ -15,9 +15,7 @@ use Wame\LaravelAppVersionManager\Observers\AppVersionObserver;
 
 class LaravelAppVersionManagerProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
@@ -29,15 +27,12 @@ class LaravelAppVersionManagerProvider extends ServiceProvider
             $this->publishConfigs();
 
             // Export views
-            //$this->publishViews();
-
-            // Export translations
-            $this->publishTranslations();
+            // $this->publishViews();
 
             // Register Commands
-            //$this->commands([
+            // $this->commands([
             //    InstallLaravelAuth::class,
-            //]);
+            // ]);
         }
 
         AppVersion::observe(classes: AppVersionObserver::class);
@@ -58,16 +53,15 @@ class LaravelAppVersionManagerProvider extends ServiceProvider
     protected function registerTranslations(): void
     {
         $this->loadTranslationsFrom(
-            path: __DIR__ . '/../resources/lang',
+            path: __DIR__.'/../resources/lang',
             namespace: 'laravel-app-version-manager',
         );
-        //dd(__(key: 'laravel-app-version-manager::version-messages.deprecated_app_version.message', replace: ['appName' => config(key: 'laravel-app-version-manager.app_name')]));
     }
 
     protected function registerRoutes(): void
     {
         Route::group($this->routeConfiguration(), function (): void {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         });
     }
 
@@ -79,25 +73,22 @@ class LaravelAppVersionManagerProvider extends ServiceProvider
         ];
     }
 
-    protected function publishTranslations(): void
-    {
-        $this->publishes(
-            paths: [__DIR__ . '/../resources/lang' => resource_path(path: 'lang/vendor/laravel-app-version-manager')],
-            groups: 'translations',
-        );
-    }
-
     private function publishMigrations(): void
     {
-        $migrations = [];
+        $migrations = collect([
+            'create_app_versions_table',
+            'create_app_version_history_table',
+            'add_platform_in_app_versions_table',
+        ])
+            ->filter(fn (string $migration) => empty(glob(database_path(path: "migrations/*_{$migration}.php"))))
+            ->mapWithKeys(function (string $migration, int $index) {
+                $dateFormat = now()->format('Y_m_d_His');
 
-        if (empty(glob(database_path(path: 'migrations/*_create_app_versions_table.php')))) {
-            $migrations[__DIR__ . '/../database/migrations/create_app_versions_table.php.stub'] = database_path(path: 'migrations/' . now()->format('Y_m_d_His') . '_create_app_versions_table.php');
-        }
-
-        if (empty(glob(database_path(path: 'migrations/*_create_app_version_history_table.php')))) {
-            $migrations[__DIR__ . '/../database/migrations/create_app_version_history_table.php.stub'] = database_path(path: 'migrations/' . now()->format('Y_m_d_His') . '_create_app_version_history_table.php');
-        }
+                return [
+                    __DIR__."/../database/migrations/{$migration}.php.stub" => database_path("migrations/{$dateFormat}{$index}_{$migration}.php"),
+                ];
+            })
+            ->toArray();
 
         $this->publishes(
             paths: $migrations,
@@ -107,7 +98,7 @@ class LaravelAppVersionManagerProvider extends ServiceProvider
 
     private function publishConfigs(): void
     {
-        $configs = [__DIR__ . '/../config/laravel-app-version-manager.php' => config_path('laravel-app-version-manager.php')];
+        $configs = [__DIR__.'/../config/laravel-app-version-manager.php' => config_path('laravel-app-version-manager.php')];
 
         $this->publishes(
             paths: $configs,

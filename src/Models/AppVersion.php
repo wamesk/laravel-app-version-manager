@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Wame\LaravelAppVersionManager\Models;
 
@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
+use Wame\LaravelAppVersionManager\Enums\Platform;
 use Wame\LaravelAppVersionManager\Enums\VersionStatus;
 
 /**
@@ -25,14 +26,10 @@ class AppVersion extends Model
 {
     use HasUlids;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'title',
         'status',
+        'platform',
     ];
 
     protected $appends = [
@@ -42,12 +39,8 @@ class AppVersion extends Model
         'older',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
+        'platform' => Platform::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -79,11 +72,11 @@ class AppVersion extends Model
 
     public function deprecated(): Attribute
     {
-        return Attribute::get(fn () => VersionStatus::DEPRECATED === $this->status);
+        return Attribute::get(fn () => $this->status === VersionStatus::DEPRECATED);
     }
 
     public function older(): Attribute
     {
-        return Attribute::get(fn () => VersionStatus::OLDER === $this->status);
+        return Attribute::get(fn () => $this->status === VersionStatus::OLDER);
     }
 }
